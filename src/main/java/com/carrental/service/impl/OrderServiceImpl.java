@@ -69,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
         else if(rentalDays>=5 && rentalDays<10){
             discountByRentalDays=10;
         }
-        else if(rentalDays<=10){
+        else if(rentalDays>=10 && rentalDays<30){
             discountByRentalDays=20;
         }
         else{
@@ -109,8 +109,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllCustomerOrder(Long id){
-        Customer customer = customerService.getCustomerById(id);
+    public List<Order> getAllCustomerOrder(Long customerId){
+        Customer customer = customerService.getCustomerById(customerId);
         return orderRepository.findAllByCustomer(customer);
     }
 
