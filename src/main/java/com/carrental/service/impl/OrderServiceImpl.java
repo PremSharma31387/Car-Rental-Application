@@ -5,6 +5,8 @@ import com.carrental.entity.Customer;
 import com.carrental.entity.Order;
 import com.carrental.entity.Vehicle;
 import com.carrental.exception.coupon.CouponUnavailableForCustomerException;
+import com.carrental.exception.order.OrderAlreadyCancelledException;
+import com.carrental.exception.order.OrderAlreadyCompletedException;
 import com.carrental.exception.order.OrderNotFoundWithIdException;
 import com.carrental.exception.order.RentalDaysIsInvalidException;
 import com.carrental.exception.vehicle.VehicleIsNotPresentNowException;
@@ -136,6 +138,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order completeOrder(Long id) {
         Order order = getOrderById(id);
+        if(!order.getStatus().equals("PLACED")) {
+            throw new OrderAlreadyCancelledException();
+        }
         order.setStatus("COMPLETED");
         return orderRepository.save(order);
     }
@@ -143,6 +148,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancelOrder(Long id) {
         Order order = getOrderById(id);
+        if(!order.getStatus().equals("PLACED")) {
+            throw new OrderAlreadyCompletedException();
+        }
         order.setStatus("CANCELLED");
         return orderRepository.save(order);
     }

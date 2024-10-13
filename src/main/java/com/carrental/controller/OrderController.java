@@ -50,7 +50,7 @@ public class OrderController {
         return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
-    @GetMapping("complete/{id}")
+    @PostMapping("complete/{id}")
     public ResponseEntity<OrderResponse> completeOrder(@PathVariable Long id){
         Order order = orderService.completeOrder(id);
         OrderResponse orderResponse = new OrderResponse();
@@ -60,7 +60,7 @@ public class OrderController {
         return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping("cancel/{id}")
+    @PostMapping("cancel/{id}")
     public ResponseEntity<OrderResponse> cancelOrder(@PathVariable Long id){
         Order order = orderService.cancelOrder(id);
         OrderResponse orderResponse = new OrderResponse();

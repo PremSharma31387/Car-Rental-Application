@@ -24,6 +24,22 @@ public class OrderExceptionController {
         orderResponse.setStatusDescription("Order is not found with this id");
         return new ResponseEntity<>(orderResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = OrderAlreadyCancelledException.class)
+    public ResponseEntity<OrderResponse> exception(OrderAlreadyCancelledException e){
+        OrderResponse orderResponse = new OrderResponse();
+        orderResponse.setStatusCode(400);
+        orderResponse.setStatusDescription("Order already cancelled");
+        return new ResponseEntity<>(orderResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = OrderAlreadyCompletedException.class)
+    public ResponseEntity<OrderResponse> exception(OrderAlreadyCompletedException e){
+        OrderResponse orderResponse = new OrderResponse();
+        orderResponse.setStatusCode(400);
+        orderResponse.setStatusDescription("Order already completed");
+        return new ResponseEntity<>(orderResponse, HttpStatus.BAD_REQUEST);
+    }
 }
 
 
