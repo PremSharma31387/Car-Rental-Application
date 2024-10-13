@@ -43,16 +43,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Order order) throws VehicleNotFoundWithIdException {
-        Coupon coupon = couponService.getCouponByCouponCode(order.getCouponCode());
-
         Customer customer = customerService.getCustomerById(order.getCustomer().getId());
+        double discountByCoupon =0;
+        Coupon coupon =null;
+        if(order.getCouponCode()!=null) {
+             coupon = couponService.getCouponByCouponCode(order.getCouponCode());
 
-        boolean result = checkCouponForCustomer(customer, coupon.getCouponCode());
+            boolean result = checkCouponForCustomer(customer, coupon.getCouponCode());
 
-        if(!result){
-            throw new CouponUnavailableForCustomerException();
+
+            if (!result) {
+                throw new CouponUnavailableForCustomerException();
+            }
+
+            discountByCoupon = coupon.getDiscountPercentage();
         }
-
         Vehicle vehicle = vehicleService.getVehicleById(order.getVehicle().getId());
         if(!vehicle.isAvailable()){
             throw new VehicleIsNotPresentNowException();
@@ -61,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
         int rentalDays=order.getRentalDays();
         double discountByCategory=categoryService.getCategoryById(vehicle.getCategoryId()).getDiscountPercent();
 
-        double discountByCoupon = coupon.getDiscountPercentage();
+
         double discountByRentalDays =0;
         if(rentalDays<0 || rentalDays>30){
             throw new RentalDaysIsInvalidException();
@@ -87,7 +92,12 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setVehicle(vehicle);
         newOrder.setCustomer(customer);
         newOrder.setStatus("PLACED");
-        newOrder.setCouponCode(coupon.getCouponCode());
+        if(coupon!=null){
+            newOrder.setCouponCode(coupon.getCouponCode());
+        }
+        else{
+            newOrder.setCouponCode(null);
+        }
         newOrder.setRentalDays(order.getRentalDays());
         newOrder.setTotalAmount(totalAmount);
         vehicle.setAvailable(false);
