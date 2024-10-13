@@ -27,8 +27,10 @@ public class VehicleServiceImpl implements VehicleService {
 
     //    Get All Vehicle Service
     @Override
-    public Iterable<Vehicle> getAllVehicle() {
-        return vehicleRepository.findAll();
+    public List<Vehicle> getAllVehicle() {
+        List<Vehicle> allVehicle= (List<Vehicle>) vehicleRepository.findAll();
+        System.out.println(allVehicle);
+        return allVehicle;
     }
 
 //    Create Vehicle Service
@@ -86,5 +88,17 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle vehicle = getVehicleById(id);
         vehicle.setAvailable(true);
        return vehicleRepository.save(vehicle);
+    }
+
+    @Override
+    public void returnAllVehicle() {
+        List<Vehicle> allVehicle = getAllVehicle();
+        for (Vehicle v : allVehicle){
+            v.setAvailable(true);
+            vehicleRepository.save(v);
+
+        }
+
+        System.out.println("-------->"+getAllVehicle());
     }
 }

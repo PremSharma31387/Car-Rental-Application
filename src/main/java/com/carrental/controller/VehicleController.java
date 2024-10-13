@@ -23,14 +23,14 @@ public class VehicleController {
         Iterable<Vehicle> allVehicle = vehicleService.getAllVehicle();
         VehicleResponse vehicleResponse = new VehicleResponse();
         vehicleResponse.setStatusCode(201);
-        vehicleResponse.setStatusDescription("Vehicle created successfully");
+        vehicleResponse.setStatusDescription("All Vehicle fetched successfully");
         vehicleResponse.setVehicleList(allVehicle);
         return new ResponseEntity<>(vehicleResponse, HttpStatus.OK);
     }
 
     //    Create Vehicle Mapping
     @PostMapping("/create")
-    public ResponseEntity<VehicleResponse> createVehicle(@RequestBody Vehicle vehicle) throws VehicleNotFoundWithIdException {
+    public ResponseEntity<VehicleResponse> createVehicle(@RequestBody Vehicle vehicle)  {
         Vehicle vehicleCreated = vehicleService.createVehicle(vehicle);
         VehicleResponse vehicleResponse = new VehicleResponse();
         vehicleResponse.setStatusCode(201);
@@ -41,7 +41,7 @@ public class VehicleController {
 
     //    Get Vehicle By Id Mapping
     @GetMapping("id/{id}")
-    public ResponseEntity<VehicleResponse> getVehicleById(@PathVariable Long id) throws VehicleNotFoundWithIdException {
+    public ResponseEntity<VehicleResponse> getVehicleById(@PathVariable Long id)  {
         Vehicle vehicle = vehicleService.getVehicleById(id);
         VehicleResponse vehicleResponse = new VehicleResponse();
         vehicleResponse.setStatusCode(200);
@@ -52,28 +52,28 @@ public class VehicleController {
 
     //    Get Vehicle by Category Id Mapping
     @GetMapping("categoryId/{id}")
-    public ResponseEntity<VehicleResponse> getVehicleListByCategoryId(@PathVariable("id") Long categoryId) throws VehicleNotFoundWithIdException {
+    public ResponseEntity<VehicleResponse> getVehicleListByCategoryId(@PathVariable("id") Long categoryId)  {
         Iterable<Vehicle> vehicleList = vehicleService.getVehicleListByCategoryId(categoryId);
         VehicleResponse vehicleResponse = new VehicleResponse();
         vehicleResponse.setStatusCode(200);
-        vehicleResponse.setStatusDescription("Vehicle is present with this id");
+        vehicleResponse.setStatusDescription("Get vehicle by category id successfully");
         vehicleResponse.setVehicleList(vehicleList);
         return new ResponseEntity<>(vehicleResponse,HttpStatus.OK);
     }
 
     @GetMapping("categoryName/{name}")
-    public ResponseEntity<VehicleResponse> getVehicleListByCategoryName(@PathVariable("name") String categoryName) throws VehicleNotFoundWithIdException {
+    public ResponseEntity<VehicleResponse> getVehicleListByCategoryName(@PathVariable("name") String categoryName)  {
         Iterable<Vehicle> vehicleList = vehicleService.getVehicleListByCategoryName(categoryName.toUpperCase());
         VehicleResponse vehicleResponse = new VehicleResponse();
         vehicleResponse.setStatusCode(200);
-        vehicleResponse.setStatusDescription("Vehicle is present with this Name");
+        vehicleResponse.setStatusDescription("Get vehicle by category name successfully");
         vehicleResponse.setVehicleList(vehicleList);
         return new ResponseEntity<>(vehicleResponse,HttpStatus.OK);
     }
 
     //    Update Vehicle Mapping
     @PutMapping("/update/{id}")
-    public ResponseEntity<VehicleResponse> updateVehicle(@RequestBody Vehicle vehicle,@PathVariable Long id) throws VehicleNotFoundWithIdException {
+    public ResponseEntity<VehicleResponse> updateVehicle(@RequestBody Vehicle vehicle,@PathVariable Long id)  {
         Vehicle vehicleUpdated = vehicleService.updateVehicle(id,vehicle);
         VehicleResponse vehicleResponse = new VehicleResponse();
         vehicleResponse.setStatusCode(201);
@@ -84,7 +84,7 @@ public class VehicleController {
 
 //    Delete Vehicle Mapping
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<VehicleResponse> deleteVehicle(@PathVariable Long id) throws VehicleNotFoundWithIdException {
+    public ResponseEntity<VehicleResponse> deleteVehicle(@PathVariable Long id) {
         vehicleService.deleteVehicle(id);
         VehicleResponse vehicleResponse =new VehicleResponse();
         vehicleResponse.setStatusCode(201);
@@ -94,7 +94,7 @@ public class VehicleController {
 
 
     @PutMapping("/return/{id}")
-    public ResponseEntity<VehicleResponse> returnVehicle(@PathVariable Long id) throws VehicleNotFoundWithIdException {
+    public ResponseEntity<VehicleResponse> returnVehicle(@PathVariable Long id) {
         Vehicle vehicle = vehicleService.returnVehicle(id);
         VehicleResponse vehicleResponse =new VehicleResponse();
         vehicleResponse.setStatusCode(201);
@@ -103,6 +103,14 @@ public class VehicleController {
         return new ResponseEntity<>(vehicleResponse, HttpStatus.CREATED);
     }
 
+    @PutMapping("/return")
+    public ResponseEntity<VehicleResponse> returnAllVehicle(){
+        vehicleService.returnAllVehicle();
+        VehicleResponse vehicleResponse =new VehicleResponse();
+        vehicleResponse.setStatusCode(201);
+        vehicleResponse.setStatusDescription("Vehicle all return successfully");
+        return new ResponseEntity<>(vehicleResponse, HttpStatus.CREATED);
+    }
 
 
 }

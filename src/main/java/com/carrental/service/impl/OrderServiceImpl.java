@@ -17,7 +17,6 @@ import com.carrental.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +45,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Order order) throws VehicleNotFoundWithIdException {
         Customer customer = customerService.getCustomerById(order.getCustomer().getId());
+        Vehicle vehicle = vehicleService.getVehicleById(order.getVehicle().getId());
+        if(!vehicle.isAvailable()){
+            throw new VehicleIsNotPresentNowException();
+        }
         double discountByCoupon =0;
         Coupon coupon =null;
         if(order.getCouponCode()!=null) {
@@ -60,10 +63,7 @@ public class OrderServiceImpl implements OrderService {
 
             discountByCoupon = coupon.getDiscountPercentage();
         }
-        Vehicle vehicle = vehicleService.getVehicleById(order.getVehicle().getId());
-        if(!vehicle.isAvailable()){
-            throw new VehicleIsNotPresentNowException();
-        }
+
 
         int rentalDays=order.getRentalDays();
         double discountByCategory=categoryService.getCategoryById(vehicle.getCategoryId()).getDiscountPercent();
@@ -102,9 +102,10 @@ public class OrderServiceImpl implements OrderService {
         }
         newOrder.setRentalDays(order.getRentalDays());
         newOrder.setTotalAmount(totalAmount);
+        Order orderSaved = orderRepository.save(newOrder);
         vehicle.setAvailable(false);
         vehicleRepository.save(vehicle);
-       return orderRepository.save(newOrder);
+       return orderSaved;
     }
 
     private boolean checkCouponForCustomer(Customer customer,String couponCode){

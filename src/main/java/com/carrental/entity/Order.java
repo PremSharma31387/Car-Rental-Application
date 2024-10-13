@@ -21,7 +21,7 @@ public class Order {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="vehicle_id",nullable = false)
     private Vehicle vehicle;
 
